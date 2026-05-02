@@ -94,9 +94,9 @@ function App() {
         <Galaxy
           mouseRepulsion={false}
           mouseInteraction={false}
-          density={0.9}
-          glowIntensity={0.5}
-          saturation={1}
+          density={0.55}
+          glowIntensity={0.4}
+          saturation={0.8}
           hueShift={160}
           twinkleIntensity={0.5}
           rotationSpeed={0}

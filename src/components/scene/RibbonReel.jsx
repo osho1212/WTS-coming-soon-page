@@ -19,11 +19,11 @@ const SPROCKET_OFFSET = RIBBON_HW - 0.055
 const SPROCKET_LIFT   = 0.014
 
 // ─── Performance optimized quality tiers ──────────────────────────────────────
-const EDGE_FRAMES     = isMobile ? 40 : 80
-const PLACE_FRAMES    = isMobile ? 120 : 250
-const SPK_FRAMES      = isMobile ? 180 : 350
-const TUBE_SEGS       = isMobile ? 40 : 65
-const TUBE_RADIAL     = isMobile ? 3 : 4 // Reduced radial segments for performance
+const EDGE_FRAMES     = isMobile ? 80 : 150
+const PLACE_FRAMES    = isMobile ? 200 : 400
+const SPK_FRAMES      = isMobile ? 300 : 600
+const TUBE_SEGS       = isMobile ? 80 : 140
+const TUBE_RADIAL     = isMobile ? 4 : 6
 
 // ─── Precompute: edge curves ──────────────────────────────────────────────────
 const _fe = ribbonCurve.computeFrenetFrames(EDGE_FRAMES, false)

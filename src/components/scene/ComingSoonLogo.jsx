@@ -64,32 +64,32 @@ const ScreenTitle = ({ titleRef, scrollProgress }) => {
     <meshStandardMaterial
       color="#1a6fff"
       emissive="#1a6fff"
-      emissiveIntensity={0.3}
-      metalness={0.5}
-      roughness={0.1}
+      emissiveIntensity={0.45}
+      metalness={0.7}
+      roughness={0.05}
       toneMapped={false}
     />
   )
   const whiteMat = (
     <meshStandardMaterial
       color="#ffffff"
-      emissive="#66aaff"
-      emissiveIntensity={0.25}
-      metalness={0.5}
-      roughness={0.1}
+      emissive="#ffffff"
+      emissiveIntensity={0.35}
+      metalness={0.7}
+      roughness={0.05}
       toneMapped={false}
     />
   )
 
   const text3DProps = {
     font: '/fonts/optimer_bold.typeface.json',
-    size: 0.22,
-    height: 0.05,
-    curveSegments: 12,
+    size: 0.28,
+    height: 0.06,
+    curveSegments: 32,
     bevelEnabled: true,
-    bevelThickness: 0.008,
-    bevelSize: 0.005,
-    bevelSegments: 4,
+    bevelThickness: 0.01,
+    bevelSize: 0.006,
+    bevelSegments: 12,
   }
 
   // Toggle visibility based on scroll threshold
@@ -109,20 +109,17 @@ const ScreenTitle = ({ titleRef, scrollProgress }) => {
   return (
     <group ref={titleRef} position={[0, 0, 0.25]} renderOrder={20}>
 
-      {/* === INITIAL: "Welcome to / Walktalk Studios" === */}
-      <group ref={initialGroupRef}>
-        <group position={[0, 0.18, 0]}>
-          <Center><Text3D {...text3DProps}>Welcome to{blueMat}</Text3D></Center>
-        </group>
-        <group position={[0, -0.18, 0]}>
-          <Center><Text3D {...text3DProps}>Walktalk Studios{whiteMat}</Text3D></Center>
-        </group>
+      {/* === INITIAL: "Walktalk Studios" (Perfectly Centered) === */}
+      <group ref={initialGroupRef} position={[0, 0.45, 0]}>
+        <Center top left={false} center>
+          <Text3D {...text3DProps}>Walktalk Studios{whiteMat}</Text3D>
+        </Center>
       </group>
 
       {/* === FINAL: "Walktalk Studios / Coming Soon" === */}
       <group ref={finalGroupRef}>
         <group position={[0, 0.18, 0]}>
-          <Center><Text3D {...text3DProps}>Walktalk Studios{blueMat}</Text3D></Center>
+          <Center><Text3D {...text3DProps}>Walktalk Studios{whiteMat}</Text3D></Center>
         </group>
         <group position={[0, -0.18, 0]}>
           <Center><Text3D {...text3DProps}>Coming Soon{whiteMat}</Text3D></Center>

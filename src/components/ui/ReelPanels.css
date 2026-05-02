@@ -132,14 +132,35 @@
 }
 
 .casting-form-panel {
-  flex: 0 0 40%;
-  background: rgba(255,255,255,0.02);
-  border: 0.5px solid rgba(255,255,255,0.08);
-  border-radius: 16px; padding: 32px 28px;
-  backdrop-filter: blur(12px);
-  position: relative;
-  overflow-y: auto; max-height: 80vh;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: min(92%, 440px);
+  background: rgba(10,10,10,0.98);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 24px; padding: 40px 32px;
+  backdrop-filter: blur(40px);
+  overflow-y: auto; max-height: 92%;
   opacity: 0;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 0 40px 120px rgba(0,0,0,1);
+  visibility: hidden;
+  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+}
+.casting-form-panel.active {
+  pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+@media (max-width: 600px) {
+  .casting-form-panel {
+    width: calc(100% - 32px);
+    padding: 32px 20px;
+    max-height: 85vh;
+  }
 }
 
 .casting-form-close {
@@ -259,10 +280,10 @@
 @media (max-width: 900px) {
   .casting-layout {
     flex-direction: column; justify-content: flex-start;
-    padding: 80px 24px 60px; gap: 20px; overflow-y: auto;
+    padding: 80px 24px 60px; gap: 20px; 
+    overflow: visible;
   }
   .casting-left { flex: none; max-width: 100%; }
-  .casting-form-panel { flex: none; width: 100%; max-height: none; }
   .casting-tagline { white-space: normal; text-align: center; width: 86%; }
 }
 
@@ -272,7 +293,7 @@
   will-change: clip-path, transform, opacity;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .panel-3-bg {
     transform-origin: center center;
   }
@@ -415,12 +436,15 @@
 
 .wts-logo {
   position: absolute;
-  top: clamp(24px, 4vh, 40px);
-  left: clamp(24px, 4vw, 48px);
+  top: clamp(32px, 5vh, 48px);
+  left: 50%;
+  transform: translateX(-50%);
   font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 20px;
+  color: #ffffff;
+  font-weight: 600;
   letter-spacing: 0.15em;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
 .frame-counter {
@@ -736,6 +760,7 @@
   opacity: 0;
   pointer-events: none;
   overflow: hidden;
+  will-change: transform;
 }
 
 .phone-layer {
@@ -923,7 +948,7 @@
     transform: none;
     max-width: none;
     text-align: center;
-    background: rgba(11,11,11,0.7);
+    background: rgba(11,11,11,0.45);
     backdrop-filter: blur(10px);
     padding: 20px;
     border-radius: 16px;
@@ -1059,4 +1084,15 @@
   .radio-eyebrow {
     font-size: 10px;
   }
+}
+
+/* Safari & Performance Optimizations */
+.phase1-text,
+.drama-panel-text,
+.casting-left,
+.panel-content,
+.casting-form-panel {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }

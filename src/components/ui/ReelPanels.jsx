@@ -284,8 +284,8 @@ export default function ReelPanels() {
       transTl.set(panel3Ref.current, { xPercent: -200, opacity: 0 }, panel4Label + '+=1.0')
       transTl.set(panel4Ref.current, { xPercent: -200 }, panel4Label + '+=1.0')
       transTl.to(blackOverlayRef.current, { opacity: 0, duration: 0.5, ease: 'power2.out' }, panel4Label + '+=1.0')
-      transTl.fromTo('.panel-casting .cast-animate', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, stagger: 0, ease: 'power3.out' }, panel4Label + '+=1.2')
-      transTl.to('.panel-casting .casting-left', { y: -20, duration: 0.8, ease: 'none' }, panel4Label + '+=1.8')
+      transTl.fromTo('.panel-casting .cast-animate', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, stagger: 0, ease: 'power3.out' }, panel4Label + '+=0.8')
+      transTl.to('.panel-casting .casting-left', { y: -10, duration: 0.3, ease: 'none' }, panel4Label + '+=1.4')
 
       const panel5Label = 'panel5'
       transTl.add(panel5Label)
@@ -294,8 +294,8 @@ export default function ReelPanels() {
       transTl.set(panel4Ref.current, { xPercent: -300, opacity: 0 }, panel5Label + '+=1.0')
       transTl.set(panel5Ref.current, { xPercent: -300 }, panel5Label + '+=1.0')
       transTl.to(blackOverlayRef.current, { opacity: 0, duration: 0.5, ease: 'power2.out' }, panel5Label + '+=1.0')
-      transTl.fromTo('.panel-radio .panel-content > *', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, stagger: 0, ease: 'power3.out' }, panel5Label + '+=1.2')
-      transTl.to('.panel-radio .panel-content', { y: -20, duration: 0.8, ease: 'none' }, panel5Label + '+=1.8')
+      transTl.fromTo('.panel-radio .panel-content > *', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, stagger: 0, ease: 'power3.out' }, panel5Label + '+=0.8')
+      transTl.to('.panel-radio .panel-content', { y: -10, duration: 0.3, ease: 'none' }, panel5Label + '+=1.4')
 
       const exitLabel = 'exit-panels'
       transTl.add(exitLabel)
@@ -346,7 +346,7 @@ export default function ReelPanels() {
         </div>
         <div className="grain-overlay" />
         <div className="ui-layer" ref={uiLayerRef}>
-          <div className="wts-logo">WTS</div>
+          <div className="wts-logo">Walktalk Studios</div>
           <div className="frame-counter" ref={counterRef}>01 / 08</div>
           <div className="phase1-text" ref={phase1TextRef}>
             <h1 className="phase1-title">The next billion screens are vertical.</h1>
@@ -413,14 +413,14 @@ export default function ReelPanels() {
         <div className="iphone-mockup" ref={phoneRef}><div className="iphone-island" /></div>
         <div className="ott-panel-info" ref={ottInfoRef}>
           <div className="ott-slate">VERTICAL · ORIGINAL · ON DEMAND</div>
-          <h2 className="ott-headline"><span>Drama made for</span><span>the way you watch.</span></h2>
+          <h2 className="ott-headline"><span>Drama made for </span><span>the way you watch.</span></h2>
           <p className="ott-body">Every title conceived, directed and produced in 9:16 — from the mountains of Uttarakhand to your screen.</p>
           <button className="ott-cta">Coming Soon</button>
         </div>
       </div>
 
       <div className="panel-3" ref={panel3Ref}>
-        <video className="panel-3-bg panel-3-bg--video" ref={panel3BgRef} src="/6c38c89a-7ef7-4317-8a0b-09d210bf76e0.webm" poster="/images/929ba58c-75b3-4d6a-8453-c4184f6d174e.jpg" preload="none" autoPlay loop muted playsInline />
+        <video className="panel-3-bg panel-3-bg--video" ref={panel3BgRef} src="/6c38c89a-7ef7-4317-8a0b-09d210bf76e0.webm" poster="/images/929ba58c-75b3-4d6a-8453-c4184f6d174e.jpg" preload="auto" autoPlay loop muted playsInline />
         <img className="panel-3-bg panel-3-bg--img" src="/images/929ba58c-75b3-4d6a-8453-c4184f6d174e.jpg" alt="" />
         <div className="panel-overlay" style={{ zIndex: 3 }} />
         <div className="uk-eyebrow-anchor"><span className="uk-line"></span>STRATEGIC LOCATION</div>
@@ -450,14 +450,20 @@ export default function ReelPanels() {
             >
               <button 
                 className="casting-cta-clean" 
-                onClick={() => gsap.to(castingFormRef.current, { x: 0, opacity: 1, duration: 0.65, ease: 'power3.out' })}
+                onClick={() => {
+                  castingFormRef.current.classList.add('active');
+                  gsap.to(castingFormRef.current, { opacity: 1, duration: 0.65, ease: 'power3.out' });
+                }}
               >
                 Register Your Interest →
               </button>
             </ElectricBorder>
           </div>
           <div className="casting-form-panel" ref={castingFormRef}>
-            <button className="casting-form-close" onClick={() => gsap.to(castingFormRef.current, { x: '100%', opacity: 0, duration: 0.45, ease: 'power3.in' })}>✕</button>
+            <button className="casting-form-close" onClick={() => {
+              castingFormRef.current.classList.remove('active');
+              gsap.to(castingFormRef.current, { opacity: 0, duration: 0.45, ease: 'power3.in' });
+            }}>✕</button>
             {castingSubmitted ? (
               <div className="casting-success"><div className="casting-success-title">We've got you.</div><div className="casting-success-body">All submissions reviewed by the WTS casting team.</div></div>
             ) : (
@@ -479,6 +485,7 @@ export default function ReelPanels() {
             )}
           </div>
         </div>
+
         <div className="casting-tagline cast-animate">The next WTS face hasn't been discovered yet. It might be yours.</div>
       </div>
 
