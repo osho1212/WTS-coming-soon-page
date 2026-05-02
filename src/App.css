@@ -11,7 +11,7 @@
 
 /* Creates the scrollable height ScrollTrigger drives against */
 .scroll-spacer {
-  height: 700vh;
+  height: 900vh;
   pointer-events: none;
 }
 

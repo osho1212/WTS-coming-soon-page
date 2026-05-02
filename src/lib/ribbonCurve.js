@@ -1,9 +1,9 @@
 import * as THREE from 'three'
 
 const points = []
-const RADIUS = 2
-const HEIGHT = 10
-const TURNS = 3
+const RADIUS = 1.8    // intimate orbit around the iPhone
+const HEIGHT = 6.5    // increased height to add space between swirls
+const TURNS = 3.5       // more loops for the denser frame count
 const COUNT = 100
 
 for (let i = 0; i <= COUNT; i++) {

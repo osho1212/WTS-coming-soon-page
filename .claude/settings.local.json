@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_console_messages",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_screenshot",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__evaluate_script",
+      "Bash(npm install *)",
+      "Bash(node -e \"const m = require\\('./node_modules/postprocessing'\\); console.log\\(typeof m.BlendFunction, typeof m.KernelSize, m.BlendFunction.ADD, m.KernelSize.LARGE\\)\")",
+      "Bash(npm run *)",
+      "Bash(node -e \"const m = require\\('./node_modules/@react-three/postprocessing/dist/index.cjs'\\); console.log\\(Object.keys\\(m\\).filter\\(k => k.includes\\('Depth'\\) || k.includes\\('Vignette'\\) || k.includes\\('Focus'\\)\\)\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(mkdir -p \"/Users/girenderbharti/Desktop/WTS coming soon page/public/fonts\")",
+      "Bash(cp \"/Users/girenderbharti/Desktop/WTS coming soon page/node_modules/three/examples/fonts/helvetiker_bold.typeface.json\" \"/Users/girenderbharti/Desktop/WTS coming soon page/public/fonts/helvetiker_bold.typeface.json\")",
+      "Bash(grep -n \"position={\\\\[1.5, 1.5\" \"/Users/girenderbharti/Desktop/WTS coming soon page/src/components/ComingSoonLogo.jsx\")",
+      "Bash(curl -s http://localhost:5173)"
+    ]
+  }
+}
