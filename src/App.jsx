@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import StudioScene from './components/StudioScene'
 import RibbonReel from './components/RibbonReel'
 import ComingSoonLogo from './components/ComingSoonLogo'
 import Galaxy from './components/Galaxy'
 import ReelPanels from './components/ReelPanels'
+import CinemaLoader from './components/CinemaLoader'
 
 import Lenis from 'lenis'
 import gsap from 'gsap'
@@ -15,6 +16,7 @@ gsap.registerPlugin(ScrollTrigger)
 function App() {
   const scrollHintRef = useRef(null)
   const transitionOverlayRef = useRef(null)
+  const [loaderDone, setLoaderDone] = useState(false)
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -60,6 +62,7 @@ function App() {
 
   return (
     <div className="app-container">
+      {!loaderDone && <CinemaLoader onComplete={() => setLoaderDone(true)} />}
       <StudioScene>
         <RibbonReel />
         <ComingSoonLogo />
@@ -115,9 +118,12 @@ function App() {
 
       <div className="scroll-spacer" />
 
-      <div style={{ position: 'relative', zIndex: 10 }}>
-        <ReelPanels />
-      </div>
+      {/* Only mount ReelPanels after the loader — it's 700vh away and this shaves setup cost off the critical path */}
+      {loaderDone && (
+        <div style={{ position: 'relative', zIndex: 10 }}>
+          <ReelPanels />
+        </div>
+      )}
     </div>
   )
 }

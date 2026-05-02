@@ -10,7 +10,7 @@ const PostProcessing = () => (
       luminanceThreshold={0.4}
       luminanceSmoothing={0.82}
       mipmapBlur
-      kernelSize={isMobile ? KernelSize.SMALL : KernelSize.MEDIUM}
+      kernelSize={isMobile ? KernelSize.VERY_SMALL : KernelSize.SMALL}
     />
   </EffectComposer>
 )

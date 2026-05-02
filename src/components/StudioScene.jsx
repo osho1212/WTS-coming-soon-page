@@ -19,7 +19,8 @@ const FrameDriver = () => {
       id = requestAnimationFrame(tick)
       if (now - last >= INTERVAL) {
         last = now - ((now - last) % INTERVAL)
-        invalidate()
+        // Skip renders while ReelPanels fully covers the 3D canvas
+        if (window._wtsSceneVisible !== false) invalidate()
       }
     }
 
@@ -33,7 +34,7 @@ const FrameDriver = () => {
 const StudioScene = ({ children }) => (
   <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 0 }}>
     <Canvas
-      dpr={isMobile ? [0.75, 1] : [1, 1.5]}
+      dpr={isMobile ? [0.75, 1] : [1, 1.25]}
       camera={{ position: [0, -6, 9], fov: 50 }}
       frameloop="demand"
       gl={{ antialias: false }}

@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
 const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768
-const COUNT = isMobile ? 140 : 300
+const COUNT = isMobile ? 100 : 180
 
 const DustParticles = () => {
   const ref      = useRef()

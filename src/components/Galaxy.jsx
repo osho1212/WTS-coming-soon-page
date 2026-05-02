@@ -261,8 +261,16 @@ export default function Galaxy({
     const mesh = new Mesh(gl, { geometry, program });
     let animateId;
 
+    // When mouse interaction is off there is nothing changing fast — 20fps is imperceptible
+    const frameInterval = mouseInteraction ? 0 : 1000 / 20;
+    let lastFrameTime = 0;
+
     function update(t) {
       animateId = requestAnimationFrame(update);
+
+      if (frameInterval > 0 && t - lastFrameTime < frameInterval) return;
+      lastFrameTime = t;
+
       if (!disableAnimation) {
         program.uniforms.uTime.value = t * 0.001;
         program.uniforms.uStarSpeed.value = (t * 0.001 * starSpeed) / 10.0;

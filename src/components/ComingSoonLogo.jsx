@@ -85,11 +85,11 @@ const ScreenTitle = ({ titleRef, scrollProgress }) => {
     font: '/fonts/helvetiker_bold.typeface.json',
     size: 0.24,
     height: 0.06,
-    curveSegments: 16,
+    curveSegments: 8,
     bevelEnabled: true,
     bevelThickness: 0.01,
     bevelSize: 0.007,
-    bevelSegments: 5,
+    bevelSegments: 2,
   }
 
   // Toggle visibility based on scroll threshold
