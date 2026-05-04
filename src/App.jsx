@@ -3,6 +3,7 @@ import StudioScene from './components/scene/StudioScene'
 import RibbonReel from './components/scene/RibbonReel'
 import ComingSoonLogo from './components/scene/ComingSoonLogo'
 import Galaxy from './components/scene/Galaxy'
+import MobileGalaxy from './components/scene/MobileGalaxy'
 import ReelPanels from './components/ui/ReelPanels'
 import CinemaLoader from './components/ui/CinemaLoader'
 
@@ -79,6 +80,9 @@ function App() {
           Scroll to explore
         </p>
       </div>
+
+      {/* Lightweight CSS star field for mobile — no extra canvas/WebGL context */}
+      {isMobile && <MobileGalaxy />}
 
       {/* Galaxy is a second full-screen OGL WebGL context — skip on mobile to
           prevent GPU memory exhaustion alongside the Three.js canvas */}
