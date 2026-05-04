@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import PulseRing from './PulseRing'
 import RadioScene from './RadioScene'
 import './ReelPanels.css'
 
@@ -34,6 +33,8 @@ export default function ReelPanels() {
   const phase1TextRef = useRef(null)
   const phase2TextRef = useRef(null)
   const statCardsRef = useRef(null)
+
+  const diveFlashRef = useRef(null)
 
   const panel12Ref = useRef(null)
   const panel3Ref = useRef(null)
@@ -81,6 +82,7 @@ export default function ReelPanels() {
       const frames = gsap.utils.toArray('.film-frame')
       const segments = gsap.utils.toArray('.film-segment')
       
+      gsap.set(diveFlashRef.current, { opacity: 0 })
       gsap.set(containerRef.current, { opacity: 0, pointerEvents: 'none' })
       gsap.set(panel12Ref.current, { opacity: 0 })
       gsap.set(phoneRef.current, { x: '50vw', y: '-50vh', rotation: 25, opacity: 0 })
@@ -209,13 +211,17 @@ export default function ReelPanels() {
           start: 'top top',
           end: 'bottom top', // spans the entire 1500% pin of the interaction
           scrub: 2.5,
-          onEnter:     () => { 
-            window._wtsSceneVisible = false;
+          onEnter:     () => {
+            // Three.js stays alive — dive ScrollTrigger below will cut it at the right moment
             gsap.set(containerRef.current, { pointerEvents: 'all' });
           },
-          onLeaveBack: () => { 
+          onLeaveBack: () => {
             window._wtsSceneVisible = true;
             gsap.set(containerRef.current, { pointerEvents: 'none' });
+            const sr = document.getElementById('studio-scene-root');
+            if (sr) gsap.set(sr, { opacity: 1, clearProps: 'transform' });
+            gsap.killTweensOf(diveFlashRef.current);
+            gsap.set(diveFlashRef.current, { opacity: 0 });
           },
         }
       })
@@ -309,13 +315,20 @@ export default function ReelPanels() {
         progress: 1,
         duration: 1.5,
         ease: 'power2.inOut',
-        onStart: () => { window._wtsSceneVisible = true },
+        onStart:          () => { window._wtsSceneVisible = true },
+        onReverseComplete: () => { window._wtsSceneVisible = false },
         onUpdate: () => { window._wtsExitProgress = exitProxy.progress; }
       }, exitLabel)
-      
+
+      // Restore the Three.js canvas — fade it back in and unwind the dive scale
+      // so the CameraRig's zoom-out (t: 1→0) is actually visible.
+      const sr = document.getElementById('studio-scene-root')
+      transTl.set(diveFlashRef.current, { opacity: 0 }, exitLabel)
+      transTl.to(sr, { opacity: 1, scale: 1, duration: 0.6, ease: 'power2.out' }, exitLabel)
+
       transTl.to(containerRef.current, { opacity: 0, duration: 0.8, ease: 'power2.inOut' }, exitLabel + '+=0.5')
       transTl.set(containerRef.current, { backgroundColor: 'transparent' }, exitLabel)
-      
+
       const clipY = window.innerHeight * 0.05;
       const clipX = window.innerWidth > 768 ? window.innerWidth * 0.3 : window.innerWidth * 0.1;
       transTl.to(panel5Ref.current, {
@@ -327,9 +340,56 @@ export default function ReelPanels() {
       transTl.to(panel5Ref.current, { opacity: 0, duration: 0.6, ease: 'power2.out' }, exitLabel + '+=0.6')
       transTl.to(phoneRef.current, { opacity: 0, duration: 0.5 }, exitLabel)
       
-      // Add a small empty hold at the very end to ensure everything has room to finish 
+      // Add a small empty hold at the very end to ensure everything has room to finish
       // before hitting the physical bottom of the scroll-spacer
       transTl.to({}, { duration: 1.0 })
+
+      // ── DIVE TRANSITION ──────────────────────────────────────────────────────
+      // Separate ScrollTrigger that covers only the first 5% of the spacer scroll
+      // (matching CameraRig's dive window). Three.js renders the camera zoom here;
+      // at the threshold we kill rendering, punch a flash, and the panel emerges.
+      const diveEnd = () => '+=' + (spacer.offsetHeight - window.innerHeight) * 0.05
+
+      ScrollTrigger.create({
+        trigger: spacer,
+        start: 'top top',
+        end: diveEnd,
+        scrub: 1,
+        onUpdate: ({ progress }) => {
+          // Desktop only: CSS scale amplifies the 3D camera zoom visually.
+          // Use gsap.set so GSAP owns the property and can animate it back during exit.
+          if (!isMobileDevice) {
+            const sr = document.getElementById('studio-scene-root')
+            if (sr) gsap.set(sr, { scale: 1 + progress * 0.55 })
+          }
+        },
+        onLeave: () => {
+          // Camera has reached the phone screen — cut Three.js and flash through
+          window._wtsSceneVisible = false
+          const sr = document.getElementById('studio-scene-root')
+          if (sr) {
+            if (!isMobileDevice) {
+              gsap.to(sr, { opacity: 0, duration: 0.25, ease: 'power2.in' })
+            } else {
+              gsap.set(sr, { opacity: 0 })
+            }
+          }
+          gsap.killTweensOf(diveFlashRef.current)
+          gsap.to(diveFlashRef.current, {
+            opacity: 1, duration: 0.25, ease: 'power2.in',
+            onComplete: () => {
+              gsap.to(diveFlashRef.current, { opacity: 0, duration: 0.45, ease: 'power2.out' })
+            }
+          })
+        },
+        onEnterBack: () => {
+          window._wtsSceneVisible = true
+          const sr = document.getElementById('studio-scene-root')
+          if (sr) gsap.set(sr, { opacity: 1, clearProps: 'transform' })
+          gsap.killTweensOf(diveFlashRef.current)
+          gsap.set(diveFlashRef.current, { opacity: 0 })
+        },
+      })
 
     }, containerRef)
 
@@ -340,6 +400,8 @@ export default function ReelPanels() {
   }, [])
 
   return (
+    <>
+    <div className="dive-flash" ref={diveFlashRef} />
     <section ref={containerRef} className="wts-panels-container">
       <div className="panel-1-2-content" ref={panel12Ref}>
         <div className="ambient-bg" ref={bgRef} />
@@ -351,7 +413,6 @@ export default function ReelPanels() {
         </div>
         <div className="grain-overlay" />
         <div className="ui-layer" ref={uiLayerRef}>
-          <div className="wts-logo">Walktalk Studios</div>
           <div className="frame-counter" ref={counterRef}>01 / 08</div>
           <div className="phase1-text" ref={phase1TextRef}>
             <h1 className="phase1-title">The next billion screens are vertical.</h1>
@@ -445,12 +506,7 @@ export default function ReelPanels() {
             <h2 className="casting-headline cast-animate">Your face.<br />Our frame.<br />The world watching.</h2>
             <p className="casting-subhead cast-animate">We are looking for real performers for India's next generation of vertical drama.</p>
             <p className="casting-body cast-animate">WTS find people who carry something — a stillness, an intensity, a truth that the camera can't ignore.</p>
-            <PulseRing
-              color="#3b82f6"
-              speed={3}
-              className="cast-animate"
-              style={{ alignSelf: 'flex-start', marginTop: '10px' }}
-            >
+            <div className="casting-cta-wrapper cast-animate">
               <button
                 className="casting-cta-clean"
                 onClick={() => {
@@ -458,9 +514,10 @@ export default function ReelPanels() {
                   gsap.to(castingFormRef.current, { opacity: 1, duration: 0.65, ease: 'power3.out' });
                 }}
               >
-                Register Your Interest →
+                <span className="casting-cta-label">Register Your Interest</span>
+                <span className="casting-cta-arrow">→</span>
               </button>
-            </PulseRing>
+            </div>
           </div>
           <div className="casting-form-panel" ref={castingFormRef}>
             <button className="casting-form-close" onClick={() => {
@@ -504,5 +561,6 @@ export default function ReelPanels() {
       </div>
       <div className="black-transition-overlay" ref={blackOverlayRef} />
     </section>
+    </>
   )
 }

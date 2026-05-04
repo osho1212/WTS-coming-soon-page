@@ -61,17 +61,6 @@ const ScreenTitle = ({ titleRef, scrollProgress }) => {
   const initialGroupRef = useRef()
   const finalGroupRef = useRef()
 
-  // Shared material builders
-  const blueMat = (
-    <meshStandardMaterial
-      color="#1a6fff"
-      emissive="#1a6fff"
-      emissiveIntensity={0.45}
-      metalness={0.7}
-      roughness={0.05}
-      toneMapped={false}
-    />
-  )
   const whiteMat = (
     <meshStandardMaterial
       color="#ffffff"
@@ -94,62 +83,70 @@ const ScreenTitle = ({ titleRef, scrollProgress }) => {
     bevelSegments: 12,
   }
 
-  // Toggle visibility based on scroll threshold
+  // Shared SDF text props for mobile — crisp at any DPR via signed-distance field rendering
+  const sdfProps = {
+    anchorX: 'center',
+    anchorY: 'middle',
+    textAlign: 'center',
+    letterSpacing: 0.04,
+    fontWeight: 700,
+    outlineWidth: 0.006,
+    outlineColor: '#c8d8ff',
+  }
+
   useFrame(() => {
-    // If we are in the exit phase, we want to show the FINAL "Coming Soon" state
-    // regardless of the initial scroll progress.
     const isExiting = window._wtsExitProgress > 0
     const p = scrollProgress.current
-    
-    // During normal scroll, switch at 0.8. During exit, always show final once exit starts.
     const showFinal = isExiting ? (window._wtsExitProgress > 0.1) : (p > 0.8)
-    
     if (initialGroupRef.current) initialGroupRef.current.visible = !showFinal
     if (finalGroupRef.current)   finalGroupRef.current.visible = showFinal
   })
 
+  if (isMobile) {
+    return (
+      <group ref={titleRef} position={[0, 0, 0.25]} renderOrder={20}>
+        <group ref={initialGroupRef} position={[0, 0.65, 0]}>
+          <Text {...sdfProps} fontSize={0.26} color="#ffffff">
+            Walktalk Studios
+          </Text>
+        </group>
+        <group ref={finalGroupRef}>
+          <Text {...sdfProps} position={[0, 0.18, 0]} fontSize={0.26} color="#ffffff">
+            Walktalk Studios
+          </Text>
+          <Text {...sdfProps} position={[0, -0.18, 0]} fontSize={0.26} color="#6eaaff">
+            Coming Soon
+          </Text>
+        </group>
+      </group>
+    )
+  }
+
   return (
     <group ref={titleRef} position={[0, 0, 0.25]} renderOrder={20}>
-
-      {/* === INITIAL: "Walktalk Studios" (Shifted slightly right and up for visual center) === */}
       <group ref={initialGroupRef} position={[0.08, 0.65, 0]}>
         <Center top left={false} center>
-          <Text3D 
-            {...text3DProps} 
-            size={isMobile ? 0.18 : 0.28} 
-            height={isMobile ? 0.001 : 0.06}
-          >
+          <Text3D {...text3DProps} size={0.28} height={0.06}>
             Walktalk Studios{whiteMat}
           </Text3D>
         </Center>
       </group>
-
-      {/* === FINAL: "Walktalk Studios / Coming Soon" === */}
       <group ref={finalGroupRef}>
         <group position={[0, 0.18, 0]}>
           <Center top left={false} center>
-            <Text3D 
-              {...text3DProps} 
-              size={isMobile ? 0.18 : 0.28} 
-              height={isMobile ? 0.001 : 0.06}
-            >
+            <Text3D {...text3DProps} size={0.28} height={0.06}>
               Walktalk Studios{whiteMat}
             </Text3D>
           </Center>
         </group>
         <group position={[0, -0.18, 0]}>
           <Center top left={false} center>
-            <Text3D 
-              {...text3DProps} 
-              size={isMobile ? 0.18 : 0.28} 
-              height={isMobile ? 0.001 : 0.06}
-            >
+            <Text3D {...text3DProps} size={0.28} height={0.06}>
               Coming Soon{whiteMat}
             </Text3D>
           </Center>
         </group>
       </group>
-
     </group>
   )
 }
