@@ -1,20 +1,16 @@
 .mgx-root {
   position: fixed;
   inset: 0;
-  /* z-index sits above the Three.js canvas (z:0) and below UI panels (z:10+) */
-  z-index: 2;
+  /* z-index: 1 — above Three.js canvas (z:0), below panels (z:10) */
+  z-index: 1;
   pointer-events: none;
-  /* No mix-blend-mode: screen — mobile Safari does not composite it correctly
-     against a WebGL canvas in a separate GPU layer, making stars invisible.
-     Stars are bright enough (#fff / rgba ~0.85) to show directly on the
-     dark #050505 canvas without blending. */
 }
 
 .mgx-stars {
   position: absolute;
   top: 0;
   left: 0;
-  /* 2px so the box-shadow dot is crisp on 2-3× DPR mobile screens */
+  /* 2px gives a crisp dot on 2-3× DPR mobile screens */
   width: 2px;
   height: 2px;
   border-radius: 50%;
@@ -22,27 +18,40 @@
   will-change: opacity;
 }
 
+/* Small stars — gentle slow fade */
 .mgx-sm {
-  animation: mgx-twinkle-a 6s ease-in-out infinite;
-}
-.mgx-md {
-  animation: mgx-twinkle-b 4s ease-in-out infinite;
-  animation-delay: -1.5s;
-}
-.mgx-lg {
-  animation: mgx-twinkle-c 2.8s ease-in-out infinite;
-  animation-delay: -0.7s;
+  animation: mgx-fade 6s ease-in-out infinite;
 }
 
-@keyframes mgx-twinkle-a {
-  0%, 100% { opacity: 0.85; }
-  50%       { opacity: 0.30; }
+/* Medium stars — moderate pulse */
+.mgx-md {
+  animation: mgx-pulse 4s ease-in-out infinite;
+  animation-delay: -1.3s;
 }
-@keyframes mgx-twinkle-b {
-  0%, 100% { opacity: 1.00; }
-  50%       { opacity: 0.40; }
+
+/* Large stars — dramatic flash / sparkle */
+.mgx-lg {
+  animation: mgx-sparkle 2.4s ease-in-out infinite;
+  animation-delay: -0.6s;
 }
-@keyframes mgx-twinkle-c {
+
+@keyframes mgx-fade {
+  0%, 100% { opacity: 0.90; }
+  50%       { opacity: 0.12; }
+}
+
+@keyframes mgx-pulse {
   0%, 100% { opacity: 1.00; }
-  50%       { opacity: 0.50; }
+  40%       { opacity: 0.08; }
+  60%       { opacity: 0.08; }
+}
+
+/* Sharp on/off flash for the brightest stars — gives the "shine" look */
+@keyframes mgx-sparkle {
+  0%        { opacity: 1.00; }
+  20%       { opacity: 1.00; }
+  35%       { opacity: 0.04; }
+  65%       { opacity: 0.04; }
+  80%       { opacity: 1.00; }
+  100%      { opacity: 1.00; }
 }

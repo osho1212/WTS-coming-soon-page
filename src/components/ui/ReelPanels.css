@@ -19,6 +19,9 @@
   background: #0B0B0B;
   color: white;
   pointer-events: none; /* Only enable when visible */
+  /* Explicit z-index so mobile Safari (which can ignore ancestor stacking
+     contexts for fixed elements) always paints panels above the galaxy layer */
+  z-index: 10;
 }
 
 .panel-1-2-content {
