@@ -1,35 +1,35 @@
 import { useMemo } from 'react'
 import './MobileGalaxy.css'
 
-// Generate box-shadow star positions once per mount.
-// Range is kept close to real mobile viewport sizes (420×950) so
-// most stars land on-screen regardless of device.
-function makeShadows(count, maxW, maxH, minAlpha, maxAlpha) {
+// box-shadow star generator — runs once at mount, never again.
+// blur > 0 gives medium/large stars a soft glow.
+function makeShadows(count, maxW, maxH, blur, minA, maxA) {
   const out = []
   for (let i = 0; i < count; i++) {
-    const x = Math.round(Math.random() * maxW)
-    const y = Math.round(Math.random() * maxH)
-    const a = (Math.random() * (maxAlpha - minAlpha) + minAlpha).toFixed(2)
-    // Blue-white tint with slight variation
-    const r = Math.round(160 + Math.random() * 95)
-    const g = Math.round(170 + Math.random() * 85)
-    out.push(`${x}px ${y}px 0 rgba(${r},${g},255,${a})`)
+    const x   = Math.round(Math.random() * maxW)
+    const y   = Math.round(Math.random() * maxH)
+    const a   = (Math.random() * (maxA - minA) + minA).toFixed(2)
+    // Blue-white tint — bright enough to show on dark (#050505) canvas
+    const r   = Math.round(200 + Math.random() * 55)
+    const g   = Math.round(210 + Math.random() * 45)
+    out.push(`${x}px ${y}px ${blur}px rgba(${r},${g},255,${a})`)
+    // Halo on medium/large stars
+    if (blur > 0) {
+      out.push(`${x}px ${y}px ${blur * 4}px rgba(140,170,255,${(a * 0.35).toFixed(2)})`)
+    }
   }
   return out.join(',')
 }
 
 export default function MobileGalaxy() {
   const [sm, md, lg] = useMemo(() => [
-    makeShadows(140, 420, 950, 0.30, 0.70),  // small stars
-    makeShadows(50,  420, 950, 0.55, 0.90),  // mid stars
-    makeShadows(15,  420, 950, 0.80, 1.00),  // bright accent stars
+    makeShadows(130, 440, 960, 0,   0.45, 0.85),  // small hard dots
+    makeShadows(45,  440, 960, 0.8, 0.65, 1.00),  // medium with glow
+    makeShadows(12,  440, 960, 1.5, 0.85, 1.00),  // bright accent + halo
   ], [])
 
   return (
     <div className="mgx-root" aria-hidden="true">
-      {/* Nebula glow — lighter colors work with mix-blend-mode:screen */}
-      <div className="mgx-nebula" />
-      {/* Star layers — 1px dots multiplied via box-shadow, opacity-animated only */}
       <div className="mgx-stars mgx-sm" style={{ boxShadow: sm }} />
       <div className="mgx-stars mgx-md" style={{ boxShadow: md }} />
       <div className="mgx-stars mgx-lg" style={{ boxShadow: lg }} />
