@@ -673,27 +673,38 @@
     left: 16px;
     right: 16px;
     max-width: none;
-    background: linear-gradient(135deg, rgba(4,4,14,0.86) 0%, rgba(6,6,22,0.78) 100%);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(255,255,255,0.09);
-    border-radius: 16px;
-    padding: 18px 20px;
+    /* No card background — text-shadow handles legibility over the frames */
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
   }
   .drama-eyebrow {
-    color: rgba(255,255,255,0.75); /* Brighter */
-    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    color: rgba(255,255,255,0.90);
+    text-shadow:
+      0 1px 4px rgba(0,0,0,1),
+      0 2px 12px rgba(0,0,0,0.95),
+      0 4px 20px rgba(0,0,0,0.85);
   }
   .drama-title {
     font-size: clamp(32px, 8vw, 44px);
-    font-weight: 600; /* Bolder */
+    font-weight: 600;
     margin-bottom: 10px;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.6); /* Shadow */
+    text-shadow:
+      0 2px 6px rgba(0,0,0,1),
+      0 4px 16px rgba(0,0,0,0.95),
+      0 8px 32px rgba(0,0,0,0.85),
+      0 12px 48px rgba(0,0,0,0.70);
   }
   .drama-body {
     font-size: 13px;
-    color: rgba(255,255,255,0.88); /* Brighter */
-    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    color: rgba(255,255,255,0.92);
+    text-shadow:
+      0 1px 4px rgba(0,0,0,1),
+      0 2px 12px rgba(0,0,0,0.95),
+      0 4px 20px rgba(0,0,0,0.80);
   }
 
   .stat-cards-container {
