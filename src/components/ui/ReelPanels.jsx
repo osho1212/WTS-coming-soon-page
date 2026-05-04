@@ -93,7 +93,7 @@ export default function ReelPanels() {
       gsap.set(phase2TextRef.current, { opacity: 0, y: 30 })
       gsap.set('.stat-card', { opacity: 0, y: 20 })
       gsap.set(gateRef.current, { opacity: 0 })
-      gsap.set(castingFormRef.current, { x: '100%', opacity: 0 })
+      gsap.set(castingFormRef.current, { opacity: 0 })
 
       const wrapperWidth = window.innerWidth > 768 ? window.innerWidth * 1.5 : window.innerWidth * 2;
       
