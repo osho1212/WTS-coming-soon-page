@@ -98,13 +98,13 @@ export default function ReelPanels() {
 
       const wrapperWidth = window.innerWidth > 768 ? window.innerWidth * 1.5 : window.innerWidth * 2;
       
-      gsap.set(wrapperRef.current, { 
-        width: wrapperWidth, 
-        height: '150vh', 
-        rotation: -15, 
-        xPercent: -50, 
+      gsap.set(wrapperRef.current, {
+        width: wrapperWidth,
+        height: '150vh',
+        rotation: -15,
+        xPercent: -50,
         yPercent: -50,
-        top: '50%',
+        top: window.innerWidth <= 768 ? '63%' : '50%',
         left: '50%',
         x: '80vw',
         y: '-10vh',
@@ -499,6 +499,7 @@ export default function ReelPanels() {
 
       <div className="panel-3 panel-casting" ref={panel4Ref}>
         <div className="casting-dot-bg" />
+        <div className="casting-wts-bg">WTS</div>
         <div className="casting-bg-beam" /><div className="casting-floor-mark" />
         <div className="casting-layout">
           <div className="casting-left">
