@@ -109,9 +109,17 @@ const DotGrid = ({
   useEffect(() => {
     if (!circlePath) return;
     let rafId;
+    let isVisible = false;
     const proxSq = proximity * proximity;
 
+    const visObs = new IntersectionObserver(([e]) => { isVisible = e.isIntersecting; });
+    if (wrapperRef.current) visObs.observe(wrapperRef.current);
+
     const draw = () => {
+      rafId = requestAnimationFrame(draw);
+      // Skip rendering when off-screen or tab is backgrounded
+      if (!isVisible || document.hidden) return;
+
       const canvas = canvasRef.current;
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
@@ -144,11 +152,13 @@ const DotGrid = ({
         ctx.restore();
       }
 
-      rafId = requestAnimationFrame(draw);
     };
 
     draw();
-    return () => cancelAnimationFrame(rafId);
+    return () => {
+      cancelAnimationFrame(rafId);
+      visObs.disconnect();
+    };
   }, [proximity, baseColor, activeRgb, baseRgb, circlePath]);
 
   useEffect(() => {
@@ -248,13 +258,29 @@ const DotGrid = ({
       }
     };
 
+    // Touch: map touchmove → onMove, touchstart → onClick (shock on tap)
+    const onTouchMove = (e) => {
+      const t = e.touches[0];
+      if (t) onMove({ clientX: t.clientX, clientY: t.clientY });
+    };
+    const onTouchStart = (e) => {
+      const t = e.changedTouches[0];
+      if (t) onClick({ clientX: t.clientX, clientY: t.clientY });
+    };
+
     const throttledMove = throttle(onMove, 50);
+    const throttledTouchMove = throttle(onTouchMove, 50);
+
     window.addEventListener('mousemove', throttledMove, { passive: true });
     window.addEventListener('click', onClick);
+    window.addEventListener('touchmove', throttledTouchMove, { passive: true });
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', throttledMove);
       window.removeEventListener('click', onClick);
+      window.removeEventListener('touchmove', throttledTouchMove);
+      window.removeEventListener('touchstart', onTouchStart);
     };
   }, [maxSpeed, speedTrigger, proximity, resistance, returnDuration, shockRadius, shockStrength]);
 

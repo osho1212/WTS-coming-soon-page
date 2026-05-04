@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import DotGrid from './DotGrid'
-import ElectricBorder from './ElectricBorder'
+import PulseRing from './PulseRing'
 import RadioScene from './RadioScene'
 import './ReelPanels.css'
 
@@ -440,16 +440,14 @@ export default function ReelPanels() {
             <h2 className="casting-headline cast-animate">Your face.<br />Our frame.<br />The world watching.</h2>
             <p className="casting-subhead cast-animate">We are looking for real performers for India's next generation of vertical drama.</p>
             <p className="casting-body cast-animate">WTS find people who carry something — a stillness, an intensity, a truth that the camera can't ignore.</p>
-            <ElectricBorder
+            <PulseRing
               color="#3b82f6"
-              speed={0.8}
-              chaos={0.1}
-              borderRadius={100}
+              speed={3}
               className="cast-animate"
               style={{ alignSelf: 'flex-start', marginTop: '10px' }}
             >
-              <button 
-                className="casting-cta-clean" 
+              <button
+                className="casting-cta-clean"
                 onClick={() => {
                   castingFormRef.current.classList.add('active');
                   gsap.to(castingFormRef.current, { opacity: 1, duration: 0.65, ease: 'power3.out' });
@@ -457,7 +455,7 @@ export default function ReelPanels() {
               >
                 Register Your Interest →
               </button>
-            </ElectricBorder>
+            </PulseRing>
           </div>
           <div className="casting-form-panel" ref={castingFormRef}>
             <button className="casting-form-close" onClick={() => {

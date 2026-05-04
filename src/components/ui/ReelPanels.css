@@ -139,6 +139,7 @@
   background: rgba(10,10,10,0.98);
   border: 1px solid rgba(255,255,255,0.2);
   border-radius: 24px; padding: 40px 32px;
+  -webkit-backdrop-filter: blur(40px);
   backdrop-filter: blur(40px);
   overflow-y: auto; max-height: 92%;
   opacity: 0;
@@ -188,7 +189,7 @@
   border: 0.5px solid rgba(255,255,255,0.1);
   border-radius: 8px; padding: 10px 14px;
   font-family: 'DM Sans', sans-serif;
-  font-size: 14px; color: #fff; outline: none;
+  font-size: 16px; color: #fff; outline: none; /* 16px prevents iOS auto-zoom on focus */
   transition: border-color 0.2s;
 }
 .casting-field input::placeholder { color: rgba(255,255,255,0.22); }
@@ -536,6 +537,7 @@
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: 12px;
   padding: 16px 20px;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   width: 180px;
 }
@@ -606,12 +608,13 @@
   .phase1-body {
     font-size: 13px;
     line-height: 1.55;
-    color: rgba(255,255,255,0.92); /* Brighter */
+    color: rgba(255,255,255,0.92);
     display: -webkit-box;
     -webkit-line-clamp: 4;
+    line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.5); /* Shadow */
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
   }
 
   .drama-panel-text {
@@ -831,7 +834,7 @@
 .ott-desc {
   font-family: 'DM Sans', sans-serif; font-size: 13px; line-height: 1.5;
   color: rgba(255,255,255,0.85); margin-bottom: 16px;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 
 .ott-play-btn {
@@ -854,7 +857,9 @@
 
 .ott-icon-circle {
   width: 36px; height: 36px; border-radius: 50%;
-  background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);
+  background: rgba(255,255,255,0.15);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   display: flex; align-items: center; justify-content: center;
   font-size: 16px; border: 1px solid rgba(255,255,255,0.2);
   transition: background 0.2s;
@@ -949,6 +954,7 @@
     max-width: none;
     text-align: center;
     background: rgba(11,11,11,0.45);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     padding: 20px;
     border-radius: 16px;
@@ -1020,6 +1026,7 @@
   position: relative;
   overflow: hidden;
   margin-top: 40px;
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 
@@ -1087,11 +1094,13 @@
 }
 
 /* Safari & Performance Optimizations */
+/* Note: casting-form-panel intentionally excluded — combining will-change with
+   backdrop-filter on the same element triggers a Safari compositing bug where
+   the blur stops rendering. GSAP handles its own compositing during animation. */
 .phase1-text,
 .drama-panel-text,
 .casting-left,
-.panel-content,
-.casting-form-panel {
+.panel-content {
   will-change: transform, opacity;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;

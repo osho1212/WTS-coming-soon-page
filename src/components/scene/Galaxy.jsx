@@ -261,12 +261,16 @@ export default function Galaxy({
     const mesh = new Mesh(gl, { geometry, program });
     let animateId;
 
-    // When mouse interaction is off there is nothing changing fast — 20fps is imperceptible
-    const frameInterval = mouseInteraction ? 0 : 1000 / 20;
+    // Static galaxy: cap at 20fps on desktop, 10fps on mobile to save GPU
+    const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
+    const frameInterval = mouseInteraction ? 0 : (isMobileDevice ? 1000 / 10 : 1000 / 20);
     let lastFrameTime = 0;
 
     function update(t) {
       animateId = requestAnimationFrame(update);
+
+      // Pause rendering when tab is hidden — saves GPU on backgrounded tabs
+      if (document.hidden) return;
 
       if (frameInterval > 0 && t - lastFrameTime < frameInterval) return;
       lastFrameTime = t;

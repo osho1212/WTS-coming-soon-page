@@ -22,6 +22,13 @@ body {
   padding: 0;
   background-color: #050505;
   overflow-x: hidden;
+  /* Prevent iOS overscroll bounce which interferes with GSAP fixed-position panels */
+  overscroll-behavior: none;
+}
+
+/* Remove tap flash on interactive elements in mobile Safari/Chrome */
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 #root {

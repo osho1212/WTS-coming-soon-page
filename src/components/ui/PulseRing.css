@@ -1,0 +1,67 @@
+/*
+ * PulseRing — scanner-beam border
+ *
+ * The outer wrapper carries the conic-gradient and rotates it continuously.
+ * The inner div counter-rotates at the same speed so the child content
+ * (button text) always stays upright. Both animations are transform-only,
+ * GPU-composited, and require no JavaScript.
+ *
+ * Fallback for browsers without conic-gradient: a static translucent border.
+ */
+
+.pulse-ring-outer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5px;
+  border-radius: 100px;
+  /* Fallback: static dim border for browsers without conic-gradient */
+  background: rgba(59, 130, 246, 0.3);
+  animation: pulseRingSpin var(--ring-speed, 3s) linear infinite;
+  position: relative;
+}
+
+/* Enhanced scanner beam — supported in Safari 12.1+, Chrome 69+, FF 83+ */
+@supports (background: conic-gradient(red, blue)) {
+  .pulse-ring-outer {
+    background: conic-gradient(
+      from 0deg,
+      rgba(59, 130, 246, 0)    0deg,
+      rgba(59, 130, 246, 0)    220deg,
+      rgba(59, 130, 246, 0.18) 255deg,
+      rgba(59, 130, 246, 0.85) 293deg,
+      rgba(147, 197, 253, 1)   312deg,  /* bright peak of the beam   */
+      rgba(59, 130, 246, 0.85) 330deg,
+      rgba(59, 130, 246, 0.1)  352deg,
+      rgba(59, 130, 246, 0)    360deg
+    );
+  }
+}
+
+.pulse-ring-inner {
+  /* Dark background hides the gradient interior — only the 1.5px ring shows */
+  background: #050505;
+  border-radius: 98.5px;
+  animation: pulseRingCounter var(--ring-speed, 3s) linear infinite;
+  /* Subtle inner glow that stays stationary (counter-rotates with content) */
+  box-shadow: 0 0 14px 1px rgba(59, 130, 246, 0.12);
+}
+
+@keyframes pulseRingSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulseRingCounter {
+  to { transform: rotate(-360deg); }
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .pulse-ring-outer {
+    animation: none;
+    background: rgba(59, 130, 246, 0.35);
+  }
+  .pulse-ring-inner {
+    animation: none;
+  }
+}
