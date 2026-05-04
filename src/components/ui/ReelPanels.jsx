@@ -481,7 +481,6 @@ export default function ReelPanels() {
           <div className="ott-slate">VERTICAL · ORIGINAL · ON DEMAND</div>
           <h2 className="ott-headline"><span>Drama made for </span><span>the way you watch.</span></h2>
           <p className="ott-body">Every title conceived, directed and produced in 9:16 — from the mountains of Uttarakhand to your screen.</p>
-          <button className="ott-cta">Coming Soon</button>
         </div>
       </div>
 

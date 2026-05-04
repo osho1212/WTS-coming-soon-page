@@ -1,10 +1,10 @@
 import * as THREE from 'three'
 
 const points = []
-const RADIUS = 2.4    // wider orbit for more spatial presence
-const HEIGHT = 9.0    // more vertical space between twists
-const TURNS = 2.8       // fewer, wider loops for a cleaner look
-const COUNT = 200
+const RADIUS = 2.5    // slightly wider for more spatial presence
+const HEIGHT = 8.5    // vertical span
+const TURNS = 2.4     // fewer turns → more open, flowing arc between loops
+const COUNT = 250     // more points for a smoother curve
 
 for (let i = 0; i <= COUNT; i++) {
   const t = i / COUNT
