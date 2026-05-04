@@ -1,4 +1,4 @@
-import { Text3D, Center, useGLTF, Clone, useTexture } from '@react-three/drei'
+import { Text, Text3D, Center, useGLTF, Clone, useTexture } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useRef, useEffect, Suspense, useMemo } from 'react'
 import * as THREE from 'three'
@@ -53,6 +53,8 @@ const ScreenImage = () => {
     </mesh>
   )
 }
+
+const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768
 
 // --- SUB-COMPONENT: Screen Title (centered on phone screen) ---
 const ScreenTitle = ({ titleRef, scrollProgress }) => {
@@ -109,20 +111,42 @@ const ScreenTitle = ({ titleRef, scrollProgress }) => {
   return (
     <group ref={titleRef} position={[0, 0, 0.25]} renderOrder={20}>
 
-      {/* === INITIAL: "Walktalk Studios" (Perfectly Centered) === */}
-      <group ref={initialGroupRef} position={[0, 0.45, 0]}>
+      {/* === INITIAL: "Walktalk Studios" (Shifted slightly right and up for visual center) === */}
+      <group ref={initialGroupRef} position={[0.08, 0.65, 0]}>
         <Center top left={false} center>
-          <Text3D {...text3DProps}>Walktalk Studios{whiteMat}</Text3D>
+          <Text3D 
+            {...text3DProps} 
+            size={isMobile ? 0.18 : 0.28} 
+            height={isMobile ? 0.001 : 0.06}
+          >
+            Walktalk Studios{whiteMat}
+          </Text3D>
         </Center>
       </group>
 
       {/* === FINAL: "Walktalk Studios / Coming Soon" === */}
       <group ref={finalGroupRef}>
         <group position={[0, 0.18, 0]}>
-          <Center><Text3D {...text3DProps}>Walktalk Studios{whiteMat}</Text3D></Center>
+          <Center top left={false} center>
+            <Text3D 
+              {...text3DProps} 
+              size={isMobile ? 0.18 : 0.28} 
+              height={isMobile ? 0.001 : 0.06}
+            >
+              Walktalk Studios{whiteMat}
+            </Text3D>
+          </Center>
         </group>
         <group position={[0, -0.18, 0]}>
-          <Center><Text3D {...text3DProps}>Coming Soon{whiteMat}</Text3D></Center>
+          <Center top left={false} center>
+            <Text3D 
+              {...text3DProps} 
+              size={isMobile ? 0.18 : 0.28} 
+              height={isMobile ? 0.001 : 0.06}
+            >
+              Coming Soon{whiteMat}
+            </Text3D>
+          </Center>
         </group>
       </group>
 

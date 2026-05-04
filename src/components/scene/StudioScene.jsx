@@ -10,7 +10,7 @@ const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || w
 const StudioScene = ({ children }) => (
   <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 0 }}>
     <Canvas
-      dpr={isMobile ? [1, 1] : [1, 1.5]}
+      dpr={isMobile ? [1.5, 2] : [1, 2]}
       camera={{ position: [0, -6, 9], fov: 50 }}
       frameloop="always"
       gl={{ 
