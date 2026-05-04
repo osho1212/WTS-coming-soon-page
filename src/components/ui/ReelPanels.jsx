@@ -202,7 +202,7 @@ export default function ReelPanels() {
         }
       }
 
-      filmTlRef.current.timeScale(1.75).play()
+      filmTlRef.current.timeScale(2).play()
 
       const spacer = document.querySelector('.scroll-spacer')
       const transTl = gsap.timeline({
