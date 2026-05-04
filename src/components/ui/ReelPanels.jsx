@@ -123,30 +123,31 @@ export default function ReelPanels() {
 
       let _frame3D = 0
       update3D = () => {
-        // Once the swirl factor reaches zero (post-OTT transition) this is
-        // permanently a no-op — avoids 24 gsap.set() calls per frame for nothing.
-        // On mobile we skip 3D rotation entirely: preserve-3d creates a separate
-        // GPU compositing layer per segment (24 layers) which exhausts mobile VRAM.
         if (swirlObj.factor <= 0.005 || isMobileDevice) return;
-        if (++_frame3D % 3 !== 0) return
+        if (++_frame3D % 3 !== 0) return;
         if (!trackRef.current) return;
         const trackX = gsap.getProperty(trackRef.current, 'x');
         const wrapperCenter = wrapperWidth / 2;
 
         segments.forEach((segment, i) => {
-           const localCenterX = i * step + step / 2;
-           const absX = trackX + localCenterX;
-           const dist = absX - wrapperCenter;
-           const normalized = dist / (window.innerWidth / 2);
+          const localCenterX = i * step + step / 2;
+          const absX = trackX + localCenterX;
+          const dist = absX - wrapperCenter;
+          const normalized = dist / (window.innerWidth / 2);
+          const absN = Math.abs(normalized);
 
-           const z = -Math.pow(Math.abs(normalized), 2.2) * 500 * swirlObj.factor;
-           const rotY = -normalized * 35 * swirlObj.factor;
+          // Blur increases toward edges (depth-of-field illusion on a flat strip)
+          const blur = Math.pow(absN, 1.3) * 8 * swirlObj.factor;
+          // Opacity fades toward edges, never fully invisible
+          const opacity = Math.max(0.15, 1 - absN * 0.28 * swirlObj.factor);
 
-           gsap.set(segment, {
-             z: z,
-             rotationY: rotY,
-             transformPerspective: 1200
-           });
+          gsap.set(segment, {
+            filter: blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : 'none',
+            opacity,
+            z: 0,
+            rotationY: 0,
+            rotationX: 0,
+          });
         });
       };
       
@@ -464,16 +465,16 @@ export default function ReelPanels() {
             ))}
           </div>
           <div className="filmstrip-track" ref={trackRef}>
+            <div className="film-rail film-rail--top" />
             {[...GENRES, ...GENRES, ...GENRES].map((g, i) => (
               <div className="film-segment" key={i} data-index={i}>
-                <div className="film-rail top" />
                 <div className="film-frame">
                   <div className="frame-image" style={{ backgroundImage: `linear-gradient(to bottom, transparent, rgba(0,0,0,0.5)), url("${g.img}")` }} />
                   <div className="frame-code">{g.code}</div>
                 </div>
-                <div className="film-rail bottom" />
               </div>
             ))}
+            <div className="film-rail film-rail--bottom" />
           </div>
         </div>
         <div className="iphone-mockup" ref={phoneRef}><div className="iphone-island" /></div>

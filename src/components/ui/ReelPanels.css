@@ -805,7 +805,7 @@
 .gate-corner.bl { bottom: -20px; left: -20px; border-right: none; border-top: none; }
 .gate-corner.br { bottom: -20px; right: -20px; border-left: none; border-top: none; }
 
-/* --- FILMSTRIP (3D Segmented) --- */
+/* --- FILMSTRIP (flat linear strip with blur fade) --- */
 .filmstrip-wrapper {
   position: absolute;
   display: flex;
@@ -813,9 +813,7 @@
   justify-content: flex-start;
   z-index: 4;
   will-change: width, height, border-radius, transform;
-  overflow: visible; 
-  transform-style: preserve-3d;
-  perspective: 1200px;
+  overflow: visible;
 }
 
 .filmstrip-track {
@@ -823,7 +821,6 @@
   align-items: center;
   will-change: transform;
   position: relative;
-  transform-style: preserve-3d;
 }
 
 .film-segment {
@@ -832,25 +829,10 @@
   height: 292px;
   background: #000;
   flex-shrink: 0;
-  transform-style: preserve-3d;
   display: flex;
   align-items: center;
   justify-content: center;
-  will-change: transform;
-}
-
-/* No 3D depth on mobile — preserve-3d forces a separate GPU compositing layer
-   per segment (24 layers on mobile = VRAM exhaustion and crash) */
-@media (max-width: 768px) {
-  .film-segment {
-    transform-style: flat;
-  }
-  .filmstrip-wrapper {
-    transform-style: flat;
-  }
-  .filmstrip-track {
-    transform-style: flat;
-  }
+  will-change: filter, opacity;
 }
 
 .film-frame {
@@ -880,16 +862,27 @@
   transform-origin: left bottom;
 }
 
+/* Single continuous rail spanning the entire track — not per-segment */
 .film-rail {
   position: absolute;
-  left: 0; right: 0;
-  height: 16px;
-  background-image: repeating-linear-gradient(to right, #fff 0, #fff 12px, transparent 12px, transparent 24px);
+  left: 0;
+  right: 0;
+  height: 18px;
+  background: #0a0a0a;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(255,255,255,0.92) 0,
+    rgba(255,255,255,0.92) 12px,
+    transparent 12px,
+    transparent 24px
+  );
   animation: sprocketMove 0.6s linear infinite;
   will-change: background-position;
+  z-index: 5;
+  pointer-events: none;
 }
-.film-rail.top { top: 8px; }
-.film-rail.bottom { bottom: 8px; }
+.film-rail--top  { top: 7px; }
+.film-rail--bottom { bottom: 7px; }
 
 @keyframes sprocketMove {
   from { background-position: 0 0; }
