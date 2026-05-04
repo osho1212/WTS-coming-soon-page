@@ -128,7 +128,7 @@ export default function ReelPanels() {
         // On mobile we skip 3D rotation entirely: preserve-3d creates a separate
         // GPU compositing layer per segment (24 layers) which exhausts mobile VRAM.
         if (swirlObj.factor <= 0.005 || isMobileDevice) return;
-        if (++_frame3D % 2 !== 0) return
+        if (++_frame3D % 3 !== 0) return
         if (!trackRef.current) return;
         const trackX = gsap.getProperty(trackRef.current, 'x');
         const wrapperCenter = wrapperWidth / 2;

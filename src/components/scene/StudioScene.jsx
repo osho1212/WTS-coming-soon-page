@@ -8,19 +8,23 @@ import DustParticles from './DustParticles'
 const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768
 
 /**
- * FrameController — drives the Three.js render loop at 60 fps only while the
- * studio scene is actually on screen. When ReelPanels take over they set
- * window._wtsSceneVisible = false; at that point we stop calling invalidate()
- * and Three.js draws nothing, cutting its GPU cost to zero for the remainder
- * of the scroll journey. The exit transition flips the flag back to true.
+ * FrameController — drives the Three.js render loop at a capped 60 fps only
+ * while the studio scene is actually on screen. Capping at 60 fps prevents
+ * 120/144 Hz displays from doubling GPU work with no visual benefit.
+ * When ReelPanels take over they set window._wtsSceneVisible = false; at that
+ * point we stop calling invalidate() and Three.js draws nothing, cutting its
+ * GPU cost to zero for the remainder of the scroll journey.
  */
+const TARGET_FRAME_MS = 1000 / 60
+
 const FrameController = () => {
   const { invalidate } = useThree()
   useEffect(() => {
     let rafId
-    const tick = () => {
-      // undefined (initial) and true both mean "scene is visible, render it"
-      if (window._wtsSceneVisible !== false) {
+    let lastTime = 0
+    const tick = (t) => {
+      if (window._wtsSceneVisible !== false && t - lastTime >= TARGET_FRAME_MS) {
+        lastTime = t
         invalidate()
       }
       rafId = requestAnimationFrame(tick)
@@ -34,7 +38,7 @@ const FrameController = () => {
 const StudioScene = ({ children }) => (
   <div id="studio-scene-root" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 0 }}>
     <Canvas
-      dpr={isMobile ? [1, 1] : [1, 2]}
+      dpr={isMobile ? [1, 1] : [1, 1.5]}
       camera={{ position: [0, -6, 9], fov: 50 }}
       frameloop="demand"
       gl={{
