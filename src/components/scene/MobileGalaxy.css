@@ -3,17 +3,20 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  overflow: hidden;
+  /* screen blend: dark areas become transparent, bright star colours
+     add to the dark Three.js canvas — same technique as the desktop Galaxy */
+  mix-blend-mode: screen;
+  opacity: 0.75;
 }
 
-/* Nebula: layered radial gradients — pure composited paint, zero JS */
+/* Nebula: must use lighter/saturated colours to show through screen blend */
 .mgx-nebula {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 40% at 30% 20%,  rgba(30, 20, 90, 0.55)  0%, transparent 70%),
-    radial-gradient(ellipse 50% 30% at 75% 65%,  rgba(10, 30, 80, 0.40)  0%, transparent 65%),
-    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(5,  10, 40, 0.30)  0%, transparent 70%);
+    radial-gradient(ellipse 70% 40% at 25% 20%,  rgba(80,  55, 220, 0.35) 0%, transparent 70%),
+    radial-gradient(ellipse 55% 35% at 78% 60%,  rgba(40,  90, 200, 0.28) 0%, transparent 65%),
+    radial-gradient(ellipse 90% 50% at 50% 105%, rgba(30,  60, 160, 0.22) 0%, transparent 65%);
 }
 
 /* Each star layer is a 1×1px dot; box-shadow clones it at every star position */
@@ -25,7 +28,6 @@
   height: 1px;
   border-radius: 50%;
   background: transparent;
-  /* opacity animation is compositor-only — no layout or paint triggered */
   will-change: opacity;
 }
 
@@ -33,25 +35,24 @@
   animation: mgx-twinkle-a 7s ease-in-out infinite;
 }
 .mgx-md {
-  animation: mgx-twinkle-b 5s ease-in-out infinite;
+  animation: mgx-twinkle-b 4.5s ease-in-out infinite;
   animation-delay: -1.8s;
 }
 .mgx-lg {
-  animation: mgx-twinkle-c 3.5s ease-in-out infinite;
+  animation: mgx-twinkle-c 3s ease-in-out infinite;
   animation-delay: -0.9s;
-  /* subtle glow on the brightest stars */
-  filter: blur(0.4px);
+  filter: blur(0.3px);
 }
 
 @keyframes mgx-twinkle-a {
-  0%, 100% { opacity: 0.65; }
-  50%       { opacity: 0.25; }
+  0%, 100% { opacity: 0.80; }
+  50%       { opacity: 0.35; }
 }
 @keyframes mgx-twinkle-b {
-  0%, 100% { opacity: 0.90; }
-  50%       { opacity: 0.40; }
+  0%, 100% { opacity: 1.00; }
+  50%       { opacity: 0.45; }
 }
 @keyframes mgx-twinkle-c {
   0%, 100% { opacity: 1.00; }
-  50%       { opacity: 0.50; }
+  50%       { opacity: 0.55; }
 }
