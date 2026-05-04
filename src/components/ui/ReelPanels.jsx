@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import DotGrid from './DotGrid'
 import PulseRing from './PulseRing'
 import RadioScene from './RadioScene'
 import './ReelPanels.css'
@@ -118,9 +117,15 @@ export default function ReelPanels() {
       gsap.set(trackRef.current, { x: startX })
 
       const swirlObj = { factor: 1 };
+      const isMobileDevice = window.innerWidth <= 768;
 
       let _frame3D = 0
       update3D = () => {
+        // Once the swirl factor reaches zero (post-OTT transition) this is
+        // permanently a no-op — avoids 24 gsap.set() calls per frame for nothing.
+        // On mobile we skip 3D rotation entirely: preserve-3d creates a separate
+        // GPU compositing layer per segment (24 layers) which exhausts mobile VRAM.
+        if (swirlObj.factor <= 0.005 || isMobileDevice) return;
         if (++_frame3D % 2 !== 0) return
         if (!trackRef.current) return;
         const trackX = gsap.getProperty(trackRef.current, 'x');
@@ -134,7 +139,7 @@ export default function ReelPanels() {
 
            const z = -Math.pow(Math.abs(normalized), 2.2) * 500 * swirlObj.factor;
            const rotY = -normalized * 35 * swirlObj.factor;
-           
+
            gsap.set(segment, {
              z: z,
              rotationY: rotY,
@@ -432,7 +437,7 @@ export default function ReelPanels() {
       </div>
 
       <div className="panel-3 panel-casting" ref={panel4Ref}>
-        <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}><DotGrid dotSize={6} gap={17} baseColor="#594f4f" activeColor="#2f04d8" proximity={180} shockRadius={290} shockStrength={7} resistance={1100} returnDuration={4.4} /></div>
+        <div className="casting-dot-bg" />
         <div className="casting-bg-beam" /><div className="casting-floor-mark" />
         <div className="casting-layout">
           <div className="casting-left">

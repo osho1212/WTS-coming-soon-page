@@ -40,6 +40,16 @@
     #050505;
 }
 
+/* Static CSS dot grid — replaces the canvas DotGrid (removes RAF loop + 2D canvas overhead) */
+.casting-dot-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image: radial-gradient(circle, rgba(89, 79, 79, 0.55) 1px, transparent 1px);
+  background-size: 23px 23px;
+  pointer-events: none;
+}
+
 .casting-bg-beam {
   position: absolute; top: 0; left: 50%; transform: translateX(-50%);
   width: 2px; height: 74%;
@@ -711,6 +721,20 @@
   align-items: center;
   justify-content: center;
   will-change: transform;
+}
+
+/* No 3D depth on mobile — preserve-3d forces a separate GPU compositing layer
+   per segment (24 layers on mobile = VRAM exhaustion and crash) */
+@media (max-width: 768px) {
+  .film-segment {
+    transform-style: flat;
+  }
+  .filmstrip-wrapper {
+    transform-style: flat;
+  }
+  .filmstrip-track {
+    transform-style: flat;
+  }
 }
 
 .film-frame {
