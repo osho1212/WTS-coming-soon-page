@@ -75,11 +75,11 @@ const ScreenTitle = ({ titleRef, scrollProgress }) => {
   const text3DProps = {
     font: '/fonts/optimer_bold.typeface.json',
     size: 0.28,
-    height: 0.06,
+    height: 0.025,
     curveSegments: 32,
     bevelEnabled: true,
-    bevelThickness: 0.01,
-    bevelSize: 0.006,
+    bevelThickness: 0.006,
+    bevelSize: 0.003,
     bevelSegments: 12,
   }
 
@@ -114,7 +114,7 @@ const ScreenTitle = ({ titleRef, scrollProgress }) => {
           <Text {...sdfProps} position={[0, 0.18, 0]} fontSize={0.26} color="#ffffff">
             Walktalk Studios
           </Text>
-          <Text {...sdfProps} position={[0, -0.18, 0]} fontSize={0.26} color="#6eaaff">
+          <Text {...sdfProps} position={[0, -0.30, 0]} fontSize={0.26} color="#6eaaff">
             Coming Soon
           </Text>
         </group>
@@ -139,7 +139,7 @@ const ScreenTitle = ({ titleRef, scrollProgress }) => {
             </Text3D>
           </Center>
         </group>
-        <group position={[0, -0.18, 0]}>
+        <group position={[0, -0.30, 0]}>
           <Center top left={false} center>
             <Text3D {...text3DProps} size={0.28} height={0.06}>
               Coming Soon{whiteMat}
@@ -186,7 +186,6 @@ const IPhoneMockup = ({ titleRef, scrollProgress }) => {
     <group position={[0, 0, -0.4]}>
       <pointLight position={[-2, 6, 4]}  intensity={90}  color="#ffffff" distance={20} />
       <pointLight position={[4, -1, 4]}  intensity={80}  color="#ffffff" distance={16} />
-      <pointLight position={[0, 0, -7]}  intensity={100} color="#3366ff" distance={18} />
       <group position={[0, offsetY, 0]}>
         <Clone object={scene} scale={scale} />
         {/* Screen image */}

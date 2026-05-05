@@ -123,7 +123,7 @@ const RibbonBase = () => {
   const geo = useMemo(() => makeRibbonGeo(RIBBON_SEGS), [])
   return (
     <mesh geometry={geo} renderOrder={1}>
-      <meshBasicMaterial color="#000000" side={THREE.DoubleSide} />
+      <meshStandardMaterial color="#060810" emissive="#0a1535" emissiveIntensity={1.0} side={THREE.DoubleSide} />
     </mesh>
   )
 }
@@ -168,15 +168,42 @@ const SprocketHoles = () => {
     <instancedMesh ref={ref} args={[null, null, sprocketMatrices.length]} renderOrder={4}>
       <planeGeometry args={[SPROCKET_W, SPROCKET_H]} />
       <meshStandardMaterial
-        color="#d8d8d8"
-        metalness={0.0}
-        roughness={0.9}
+        color="#c0c8e8"
+        emissive="#aabbff"
+        emissiveIntensity={0.6}
+        metalness={0.3}
+        roughness={0.4}
         side={THREE.DoubleSide}
         polygonOffset
         polygonOffsetFactor={-5}
         polygonOffsetUnits={-5}
       />
     </instancedMesh>
+  )
+}
+
+// ─── Glowing edge rails ───────────────────────────────────────────────────────
+const EdgeRails = () => {
+  const leftMatRef  = useRef()
+  const rightMatRef = useRef()
+
+  useFrame(({ clock }) => {
+    const pulse = 0.9 + Math.sin(clock.getElapsedTime() * 1.8) * 0.35
+    if (leftMatRef.current)  leftMatRef.current.emissiveIntensity  = pulse
+    if (rightMatRef.current) rightMatRef.current.emissiveIntensity = pulse
+  })
+
+  return (
+    <>
+      <mesh renderOrder={1}>
+        <tubeGeometry args={[edgeCurveLeft, TUBE_SEGS, 0.007, TUBE_RADIAL, false]} />
+        <meshStandardMaterial ref={leftMatRef}  color="#1a1f40" emissive="#4477ff" emissiveIntensity={1.2} />
+      </mesh>
+      <mesh renderOrder={1}>
+        <tubeGeometry args={[edgeCurveRight, TUBE_SEGS, 0.007, TUBE_RADIAL, false]} />
+        <meshStandardMaterial ref={rightMatRef} color="#1a1f40" emissive="#4477ff" emissiveIntensity={1.2} />
+      </mesh>
+    </>
   )
 }
 
@@ -217,9 +244,9 @@ const InstancedPhotoFrames = ({ textures }) => {
           <planeGeometry args={[FRAME_W, FRAME_H]} />
           <meshStandardMaterial
             map={textures[texIdx]}
-            emissive="#ffffff"
+            emissive="#fffaf5"
             emissiveMap={textures[texIdx]}
-            emissiveIntensity={0.45}
+            emissiveIntensity={1.1}
             side={THREE.DoubleSide}
             polygonOffset
             polygonOffsetFactor={-2}
@@ -245,14 +272,7 @@ const RibbonReel = () => {
       <RibbonBase />
 
       {/* Outer edge rails along each film edge */}
-      <mesh renderOrder={1}>
-        <tubeGeometry args={[edgeCurveLeft,  TUBE_SEGS, 0.007, TUBE_RADIAL, false]} />
-        <meshBasicMaterial color="#000000" />
-      </mesh>
-      <mesh renderOrder={1}>
-        <tubeGeometry args={[edgeCurveRight, TUBE_SEGS, 0.007, TUBE_RADIAL, false]} />
-        <meshBasicMaterial color="#000000" />
-      </mesh>
+      <EdgeRails />
 
       {/* Dark border matte behind each photo — visible on both sides */}
       <FrameBorders />
